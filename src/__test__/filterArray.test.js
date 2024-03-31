@@ -5,6 +5,8 @@ import {
 import { filterArray } from "../filterArray";
 
 const cb = jest.fn();
+const logSpy = jest.spyOn(console, "log");
+
 describe("filterArray", () => {
   afterEach(() => {
     jest.clearAllMocks();
@@ -13,6 +15,7 @@ describe("filterArray", () => {
   it("should not invoke callback when an array is empty", () => {
     filterArray([], cb);
     expect(cb).not.toHaveBeenCalled();
+    expect(logSpy).not.toHaveBeenCalled();
   });
 
   it("should invoke provided function as many time as the length of an array", () => {
@@ -25,6 +28,7 @@ describe("filterArray", () => {
     const hasQuantity = (order) => order.qty > 0;
     const res = filterArray(basketWithNoQuantity, hasQuantity);
     expect(res).toEqual(filteredBasketWithQuantityOnly);
+    expect(logSpy).toHaveBeenCalledTimes(basketWithNoQuantity.length);
   });
 
   it("should return an empty array when no elements match the callback condition", () => {
